@@ -71,3 +71,11 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+---
+
+DDD Architecture
+
+The disposition of the folders are as the image bellow.
+
+![folders disposition](image.png)
