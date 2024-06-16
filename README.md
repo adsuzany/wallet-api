@@ -24,7 +24,8 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This project is a Wallet API, the main purpose is to receive events of operations into the wallet balance and get information.
+Based in NestJS and using Prisma ORM.
 
 ## Installation
 
@@ -50,32 +51,22 @@ $ npm run start:prod
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
-
----
-
-DDD Architecture
+## DDD Architecture
 
 The disposition of the folders are as the image bellow.
 
 ![folders disposition](image.png)
+
+## ERM Diagram
+
+This project uses a database with entity relationship, that so this is the model diagram that represents it.
+
+## Support
+
+Nest is an MIT-licensed open source project. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## License
+
+Nest is [MIT licensed](LICENSE).
