@@ -1,5 +1,5 @@
 export const RESPONSE = {
-  SUCCESS: 'Completed Successfully',
+  SUCCESS: 'Operation Completed Successfully',
   BALANCE: (value: number) => {
     return `Current Balance: $${value}`;
   },

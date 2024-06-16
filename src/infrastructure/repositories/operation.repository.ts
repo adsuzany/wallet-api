@@ -1,14 +1,15 @@
-import { Operation, OperationType } from '@prisma/client';
+import { OperationType } from '@prisma/client';
 import { PrismaService } from '../services/prisma.service';
 import { Injectable, UnsupportedMediaTypeException } from '@nestjs/common';
 import { IOperation } from 'src/domain/repositories/operation.interface';
 import { RefundCancelPurchaseDto } from 'src/application/dtos/requests/refund-cancel-purchase.request.dto';
+import { StatementResponseDto } from 'src/application/dtos/responses/statement.response';
 
 @Injectable()
 export class OperationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findUserOperations(userId: string): Promise<IOperation[]> {
+  async findUserOperations(userId: string): Promise<StatementResponseDto[]> {
     return this.prisma.operation.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },

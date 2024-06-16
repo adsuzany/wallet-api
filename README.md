@@ -44,6 +44,10 @@ $ npm run start:prod
 $ npm run test
 ```
 
+## Swagger
+
+To access the swagger use this endpoint: /swagger-docs.
+
 ## DDD Architecture
 
 The disposition of the folders are as the image bellow.

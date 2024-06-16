@@ -4,7 +4,6 @@ import { UserRepository } from 'src/infrastructure/repositories/user.repository'
 import { IOperation } from '../../repositories/operation.interface';
 import { OperationTypeEnum } from 'src/common/enums/operation-type.enum';
 import { RESPONSE } from 'src/common/constants/response.constants';
-import { User } from '@prisma/client';
 import { IUser } from 'src/domain/repositories/user.interface';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class AddMoneyService {
       return RESPONSE.SUCCESS;
     } catch (error) {
       console.error(error);
-      throw new NotFoundException(RESPONSE.NOT_FOUND);
+      throw new Error(error.message);
     }
   }
 
