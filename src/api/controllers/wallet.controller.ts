@@ -1,3 +1,4 @@
+import { RefundCancelPurchaseDto } from 'src/application/dtos/requests/refund-cancel-purchase.request.dto';
 import { RefundCancelService } from '../../domain/services/refund-cancel-service/refund-cancel.service';
 import { ConsultBalanceService } from './../../domain/services/consult-balance-service/consult-balance.service';
 import { PurchaseService } from './../../domain/services/purchase-service/purchase.service';
@@ -46,7 +47,7 @@ export class WalletController {
 
   @Post('purchase/cancel-refund')
   async cancelRefundPurchase(
-    @Body() body: AddMoneyRequestDto
+    @Body() body: RefundCancelPurchaseDto
   ): Promise<string> {
     return this.refundCancelService.refundCancelPurchase(body);
   }

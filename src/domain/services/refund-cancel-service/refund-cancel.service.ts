@@ -1,31 +1,53 @@
-import { Injectable } from '@nestjs/common';
-import { AddMoneyRequestDto } from 'src/application/dtos/requests/add-money.request.dto';
+import { OperationRepository } from 'src/infrastructure/repositories/operation.repository';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
-import { IOperation } from '../../repositories-interfaces/operation.interface';
+import { IOperation } from '../../repositories/operation.interface';
 import { OperationTypeEnum } from 'src/common/enums/operation-type.enum';
 import { RESPONSE } from 'src/common/constants/response.constants';
-import { User } from '@prisma/client';
+import { IUser } from 'src/domain/repositories/user.interface';
+import { RefundCancelPurchaseDto } from 'src/application/dtos/requests/refund-cancel-purchase.request.dto';
 
 @Injectable()
 export class RefundCancelService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly operationRepository: OperationRepository
+  ) {}
 
-  async refundCancelPurchase(payload: AddMoneyRequestDto): Promise<string> {
+  async refundCancelPurchase(
+    payload: RefundCancelPurchaseDto
+  ): Promise<string> {
     try {
-      // procurar a operacao do usuario e fazer o upsert com aquele valor anterior
-      const user: User = await this.userRepository.findUserById(payload.userId);
+      const operation: IOperation =
+        await this.operationRepository.findPurchaseByUser(payload);
+      const user: IUser = await this.userRepository.findUserById(
+        payload.userId
+      );
+
+      await this.addOperation(user, operation);
+
+      return RESPONSE.SUCCESS;
+    } catch (error) {
+      console.error(error);
+      throw new NotFoundException(RESPONSE.NOT_FOUND);
+    }
+  }
+
+  private async addOperation(
+    user: IUser,
+    operation: IOperation
+  ): Promise<void> {
+    try {
       const addOperation: IOperation = {
-        currentBalance: user ? user.balance + payload.value : payload.value,
+        currentBalance: user ? user.balance + operation.value : operation.value,
         type: OperationTypeEnum.refund,
-        value: payload.value,
+        value: operation.value,
       };
 
       await this.userRepository.createUserOperation(
-        payload.userId,
+        operation.userId,
         addOperation
       );
-
-      return RESPONSE.SUCCESS;
     } catch (error) {
       console.error(error);
       throw new Error(error.message);

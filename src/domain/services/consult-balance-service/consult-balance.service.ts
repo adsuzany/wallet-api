@@ -1,10 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AddMoneyRequestDto } from 'src/application/dtos/requests/add-money.request.dto';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
-import { IOperation } from '../../repositories-interfaces/operation.interface';
-import { OperationTypeEnum } from 'src/common/enums/operation-type.enum';
 import { RESPONSE } from 'src/common/constants/response.constants';
-import { User } from '@prisma/client';
 
 @Injectable()
 export class ConsultBalanceService {
