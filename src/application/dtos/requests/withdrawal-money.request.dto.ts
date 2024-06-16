@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsUUID, Min } from 'class-validator';
 import { ATTRUBUTES } from 'src/common/constants/attributes.constants';
 
-export class WithdrawMoneyRequestDto {
+export class WithdrawalMoneyRequestDto {
   @IsUUID()
   @IsNotEmpty()
   @ApiProperty({
@@ -15,8 +15,8 @@ export class WithdrawMoneyRequestDto {
   @IsNotEmpty()
   @Min(0.1)
   @ApiProperty({
-    description: ATTRUBUTES.WITHDRAW.VALUE.DESCRIPTION,
-    example: ATTRUBUTES.WITHDRAW.VALUE.EXAMPLE,
+    description: ATTRUBUTES.WITHDRAWAL.VALUE.DESCRIPTION,
+    example: ATTRUBUTES.WITHDRAWAL.VALUE.EXAMPLE,
   })
   value: number;
 }

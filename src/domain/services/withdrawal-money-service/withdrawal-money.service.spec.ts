@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WithdrawMoneyService } from './withdraw-money.service';
+import { WithdrawalMoneyService } from './withdrawal-money.service';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
 import { InfrastructureModule } from 'src/infrastructure/infrastructure.module';
 
-describe('WithdrawMoneyService', () => {
-  let service: WithdrawMoneyService;
+describe('WithdrawalMoneyService', () => {
+  let service: WithdrawalMoneyService;
   let userRepository: UserRepository;
 
   const repositoryMock = {
@@ -16,7 +16,7 @@ describe('WithdrawMoneyService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [InfrastructureModule],
       providers: [
-        WithdrawMoneyService,
+        WithdrawalMoneyService,
         {
           provide: UserRepository,
           useValue: repositoryMock,
@@ -24,7 +24,7 @@ describe('WithdrawMoneyService', () => {
       ],
     }).compile();
 
-    service = module.get<WithdrawMoneyService>(WithdrawMoneyService);
+    service = module.get<WithdrawalMoneyService>(WithdrawalMoneyService);
     userRepository = module.get<UserRepository>(UserRepository);
   });
 
@@ -37,15 +37,13 @@ describe('WithdrawMoneyService', () => {
       });
       const withdrawRequest = { userId: '123', value: 20 };
 
-      const a = repositoryMock.createUserOperation.mock.results.values()[0];
-
       await service.withdrawMoney(withdrawRequest);
 
       expect(user.mock.results.values()[0]).toBeFalsy();
       expect(repositoryMock.createUserOperation).toBeCalled;
     });
 
-    it('should create a new user', async () => {
+    it('should still register the operation and record a negative balance', async () => {
       const user = repositoryMock.findUserById.mockResolvedValueOnce(null);
       repositoryMock.createUserOperation.mockResolvedValueOnce({
         id: '345',
@@ -53,12 +51,31 @@ describe('WithdrawMoneyService', () => {
       });
       const withdrawRequest = { userId: '123', value: 20 };
 
-      const a = repositoryMock.createUserOperation.mock.results.values()[0];
-
-      await service.withdrawMoney(withdrawRequest);
+      const response = await service.withdrawMoney(withdrawRequest);
 
       expect(user.mock.results.values()[0]).toBeFalsy();
       expect(repositoryMock.createUserOperation).toBeCalled;
+      expect(response).toBeTruthy();
+    });
+  });
+
+  describe('When a user exists', () => {
+    it('should record the withdrawal operation of the money from the wallet', async () => {
+      repositoryMock.findUserById.mockResolvedValueOnce({
+        id: '345',
+        balance: 20,
+      });
+      repositoryMock.createUserOperation.mockResolvedValueOnce({
+        id: '345',
+        balance: 20,
+      });
+      const withdrawRequest = { userId: '123', value: 20 };
+
+      const response = await service.withdrawMoney(withdrawRequest);
+
+      expect(repositoryMock.findUserById).toBeCalled();
+      expect(repositoryMock.createUserOperation).toBeCalled;
+      expect(response).toBeTruthy();
     });
   });
 });

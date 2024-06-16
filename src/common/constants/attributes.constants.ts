@@ -17,7 +17,7 @@ export const ATTRUBUTES = {
       EXAMPLE: '018117f4-67f0-44ee-b585-2c2bd593aaf9',
     },
   },
-  WITHDRAW: {
+  WITHDRAWAL: {
     VALUE: {
       DESCRIPTION: 'The value that will be removed to the wallet',
       EXAMPLE: '100',

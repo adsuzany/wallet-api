@@ -13,8 +13,8 @@ export const SWAGGER = {
   DEPOSIT: {
     DESCRIPTION: 'Makes a money deposit into this wallet.',
   },
-  WITHDRAW: {
-    DESCRIPTION: 'Makes a money withdraw from this wallet.',
+  WITHDRAWAL: {
+    DESCRIPTION: 'Makes a money withdrawal from this wallet.',
   },
   PURCHASE: {
     DESCRIPTION: 'Register a new purchase into this wallet.',

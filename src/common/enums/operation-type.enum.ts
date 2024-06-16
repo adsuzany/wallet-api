@@ -1,6 +1,6 @@
 export enum OperationTypeEnum {
   deposit = 'Deposit',
-  withdraw = 'Withdraw',
+  withdrawal = 'Withdrawal',
   purchase = 'Purchase',
   cancell = 'Cancell',
   refund = 'Refund',

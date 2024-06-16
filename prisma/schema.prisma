@@ -14,10 +14,9 @@ datasource db {
 }
 
 model User {
-  id              String          @id @default(uuid())
+  id              String          @id
   balance         Float           @default(0)
   createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
   operations      Operation[]
 }
 
@@ -25,15 +24,15 @@ model Operation {
   id              String          @id @default(uuid())
   type            OperationType 
   userId          String
-  currentBalance  Float           @default(0)
+  value           Float           
+  currentBalance  Float           
   createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
   user            User            @relation(fields: [userId], references: [id])
 }
 
 enum OperationType {
   Deposit
-  Withdraw
+  Withdrawal
   Purchase
   Cancell
   Refund

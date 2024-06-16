@@ -1,11 +1,11 @@
-<p align="center">
-<img src="https://cdn-icons-png.flaticon.com/512/855/855279.png " width="160" height="160" alt="" title="" class="img-small">
-</p>
-
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">Wallet API</p>
+  <div style="text-align: center;">
+  
+  # Wallet API 💰
+    
+</div>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
@@ -52,11 +52,13 @@ To access the swagger use this endpoint: /swagger-docs.
 
 The disposition of the folders are as the image bellow.
 
-![folders disposition](image.png)
+![folders disposition](/public/ddd.png)
 
 ## ERM Diagram
 
 This project uses a database with entity relationship, that so this is the model diagram that represents it.
+
+![alt text](/public/erm.png)
 
 ## Support
 

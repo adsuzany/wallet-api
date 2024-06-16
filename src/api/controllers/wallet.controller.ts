@@ -13,9 +13,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { WithdrawMoneyService } from 'src/domain/services/withdraw-money-service/withdraw-money.service';
+import { WithdrawalMoneyService } from 'src/domain/services/withdrawal-money-service/withdrawal-money.service';
 import { WalletStatementService } from 'src/domain/services/wallet-statement-service/wallet-statement.service';
-import { WithdrawMoneyRequestDto } from 'src/application/dtos/requests/withdraw-money.request.dto';
+import { WithdrawalMoneyRequestDto } from 'src/application/dtos/requests/withdrawal-money.request.dto';
 import {
   ApiBody,
   ApiCreatedResponse,
@@ -36,7 +36,7 @@ import { ATTRUBUTES } from 'src/common/constants/attributes.constants';
 export class WalletController {
   constructor(
     private readonly addMoneyService: AddMoneyService,
-    private readonly witdrawMoneyService: WithdrawMoneyService,
+    private readonly witdrawMoneyService: WithdrawalMoneyService,
     private readonly walletStatementService: WalletStatementService,
     private readonly purchaseService: PurchaseService,
     private readonly consultBalanceService: ConsultBalanceService,
@@ -104,9 +104,9 @@ export class WalletController {
   }
 
   @ApiOperation({
-    description: SWAGGER.WITHDRAW.DESCRIPTION,
+    description: SWAGGER.WITHDRAWAL.DESCRIPTION,
   })
-  @ApiBody({ type: WithdrawMoneyRequestDto })
+  @ApiBody({ type: WithdrawalMoneyRequestDto })
   @ApiCreatedResponse({
     type: String,
     description: RESPONSE.SUCCESS,
@@ -115,7 +115,9 @@ export class WalletController {
     type: Error,
   })
   @Put('withdraw')
-  async withdrawMoney(@Body() body: WithdrawMoneyRequestDto): Promise<string> {
+  async withdrawMoney(
+    @Body() body: WithdrawalMoneyRequestDto
+  ): Promise<string> {
     return this.witdrawMoneyService.withdrawMoney(body);
   }
 
@@ -125,9 +127,9 @@ export class WalletController {
   @ApiInternalServerErrorResponse({
     type: Error,
   })
-  @ApiBody({ type: WithdrawMoneyRequestDto })
+  @ApiBody({ type: WithdrawalMoneyRequestDto })
   @Put('purchase')
-  async purchase(@Body() body: WithdrawMoneyRequestDto): Promise<string> {
+  async purchase(@Body() body: WithdrawalMoneyRequestDto): Promise<string> {
     return this.purchaseService.recordPurchase(body);
   }
 

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AddMoneyService } from './services/add-money-service/add-money.service';
-import { WithdrawMoneyService } from './services/withdraw-money-service/withdraw-money.service';
+import { WithdrawalMoneyService } from './services/withdrawal-money-service/withdrawal-money.service';
 import { WalletStatementService } from './services/wallet-statement-service/wallet-statement.service';
 import { InfrastructureModule } from 'src/infrastructure/infrastructure.module';
 import { PurchaseService } from './services/purchase-service/purchase.service';
@@ -11,7 +11,7 @@ import { ConsultBalanceService } from './services/consult-balance-service/consul
   imports: [InfrastructureModule],
   providers: [
     AddMoneyService,
-    WithdrawMoneyService,
+    WithdrawalMoneyService,
     WalletStatementService,
     PurchaseService,
     RefundCancelService,
@@ -19,7 +19,7 @@ import { ConsultBalanceService } from './services/consult-balance-service/consul
   ],
   exports: [
     AddMoneyService,
-    WithdrawMoneyService,
+    WithdrawalMoneyService,
     WalletStatementService,
     PurchaseService,
     RefundCancelService,
