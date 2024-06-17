@@ -18,15 +18,33 @@
 This project is a REST Wallet API, the main purpose is to receive events of operations into the wallet balance and get information.
 Based in NestJS and using Prisma ORM.
 
-## Installation
+## Docker Container
+
+Exposed in port 3000. Use - localhost:3000/wallet - to requests.
 
 ```bash
-$ npm install
+#To create the containers
+$ docker compose up --build
+```
+
+```bash
+#To apply the migrations into database
+$ npm run db:up
 ```
 
 ## Running the app
 
+Create a .env file into the root directory. Must have your local database url.
+
+```
+DATABASE_URL=mysql://youruser:yourpass@localhost:3306/wallet
+```
+
+Run:
+
 ```bash
+$ npm install --legacy-peer-deps
+
 # development
 $ npm run start
 
