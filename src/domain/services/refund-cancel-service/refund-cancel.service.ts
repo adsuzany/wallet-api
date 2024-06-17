@@ -5,7 +5,7 @@ import { IOperation } from '../../repositories/operation.interface';
 import { OperationTypeEnum } from 'src/common/enums/operation-type.enum';
 import { RESPONSE } from 'src/common/constants/response.constants';
 import { IUser } from 'src/domain/repositories/user.interface';
-import { RefundCancelPurchaseDto } from 'src/application/dtos/requests/refund-cancel-purchase.request.dto';
+import { RefundCancelPurchaseRequestDto } from 'src/application/dtos/requests/refund-cancel-purchase.request.dto';
 
 @Injectable()
 export class RefundCancelService {
@@ -15,7 +15,7 @@ export class RefundCancelService {
   ) {}
 
   async refundCancelPurchase(
-    payload: RefundCancelPurchaseDto
+    payload: RefundCancelPurchaseRequestDto
   ): Promise<string> {
     try {
       const operation: IOperation =
@@ -24,18 +24,19 @@ export class RefundCancelService {
         payload.userId
       );
 
-      await this.addOperation(user, operation);
+      await this.addOperation(user, operation, payload);
 
       return RESPONSE.SUCCESS;
     } catch (error) {
       console.error(error);
-      throw new NotFoundException(RESPONSE.NOT_FOUND);
+      throw new NotFoundException(RESPONSE.NOT_FOUND_OPERATION);
     }
   }
 
   private async addOperation(
     user: IUser,
-    operation: IOperation
+    operation: IOperation,
+    payload: RefundCancelPurchaseRequestDto
   ): Promise<void> {
     try {
       const addOperation: IOperation = {
@@ -45,7 +46,7 @@ export class RefundCancelService {
       };
 
       await this.userRepository.createUserOperation(
-        operation.userId,
+        payload.purchaseId,
         addOperation
       );
     } catch (error) {

@@ -4,4 +4,5 @@ export const RESPONSE = {
     return `Current Balance: $${value}`;
   },
   NOT_FOUND: 'User not found',
+  NOT_FOUND_OPERATION: 'Purchase not found',
 };

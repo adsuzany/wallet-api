@@ -32,4 +32,10 @@ export class UserRepository {
       where: { id },
     });
   }
+
+  async findUserByIdOrThrow(id: string): Promise<IUser> {
+    return this.prisma.user.findUniqueOrThrow({
+      where: { id },
+    });
+  }
 }

@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WalletStatementService } from './wallet-statement.service';
 import { OperationRepository } from 'src/infrastructure/repositories/operation.repository';
 import { InfrastructureModule } from 'src/infrastructure/infrastructure.module';
+import { StatementResponseDto } from 'src/application/dtos/responses/statement.response';
 
 describe('WalletStatementService', () => {
   let service: WalletStatementService;
@@ -26,15 +27,19 @@ describe('WalletStatementService', () => {
     service = module.get<WalletStatementService>(WalletStatementService);
     operation = module.get<OperationRepository>(OperationRepository);
   });
+
   describe('When the statement function is called', () => {
     it('should return an array of Operations objects', async () => {
-      repositoryMock.findUserOperations.mockResolvedValueOnce({});
+      repositoryMock.findUserOperations.mockResolvedValueOnce(
+        new StatementResponseDto()
+      );
 
-      const statementRequest = '123';
+      const statementRequest = '456';
 
       const result = await service.getWalletStatement(statementRequest);
-
-      expect(result).toMatchObject({});
+      expect(repositoryMock.findUserOperations).toBeCalled();
+      expect(repositoryMock.findUserOperations).toBeTruthy();
+      expect(result).toMatchObject(new StatementResponseDto());
     });
   });
 });

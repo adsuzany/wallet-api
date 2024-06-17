@@ -2,7 +2,7 @@ import { OperationType } from '@prisma/client';
 import { PrismaService } from '../services/prisma.service';
 import { Injectable, UnsupportedMediaTypeException } from '@nestjs/common';
 import { IOperation } from 'src/domain/repositories/operation.interface';
-import { RefundCancelPurchaseDto } from 'src/application/dtos/requests/refund-cancel-purchase.request.dto';
+import { RefundCancelPurchaseRequestDto } from 'src/application/dtos/requests/refund-cancel-purchase.request.dto';
 import { StatementResponseDto } from 'src/application/dtos/responses/statement.response';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class OperationRepository {
   }
 
   async findPurchaseByUser(
-    refund: RefundCancelPurchaseDto
+    refund: RefundCancelPurchaseRequestDto
   ): Promise<IOperation> {
     return this.prisma.operation.findUniqueOrThrow({
       where: {

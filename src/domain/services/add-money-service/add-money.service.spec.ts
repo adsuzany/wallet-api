@@ -10,6 +10,7 @@ describe('AddMoneyService', () => {
   const repositoryMock = {
     findUserById: jest.fn(),
     createUserOperation: jest.fn(),
+    findUserByIdOrThrow: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -32,29 +33,14 @@ describe('AddMoneyService', () => {
     it('should create a new user', async () => {
       const user = repositoryMock.findUserById.mockResolvedValueOnce(null);
       repositoryMock.createUserOperation.mockResolvedValueOnce({
-        id: '345',
+        id: '098',
         balance: 20,
       });
-      const addMoneyRequest = { userId: '123', value: 20 };
+      const addMoneyRequest = { userId: '098', value: 20 };
 
       await service.addMoney(addMoneyRequest);
 
       expect(user.mock.results.values()[0]).toBeFalsy();
-      expect(repositoryMock.createUserOperation).toBeCalled;
-    });
-
-    it('should create a new user', async () => {
-      const user = repositoryMock.findUserById.mockResolvedValueOnce(null);
-      repositoryMock.createUserOperation.mockResolvedValueOnce({
-        id: '345',
-        balance: 20,
-      });
-      const addMoneyRequest = { userId: '123', value: 20 };
-
-      const response = await service.addMoney(addMoneyRequest);
-
-      expect(user.mock.results.values()[0]).toBeFalsy();
-      expect(response).toBeTruthy();
       expect(repositoryMock.createUserOperation).toBeCalled;
     });
   });
@@ -67,15 +53,15 @@ describe('AddMoneyService', () => {
       });
       repositoryMock.createUserOperation.mockResolvedValueOnce({
         id: '345',
-        balance: 20,
+        balance: 40,
       });
-      const addMoneyRequest = { userId: '123', value: 20 };
+      const addMoneyRequest = { userId: '345', value: 20 };
 
       const response = await service.addMoney(addMoneyRequest);
 
       expect(repositoryMock.findUserById).toBeCalled();
-      expect(response).toBeTruthy();
       expect(repositoryMock.createUserOperation).toBeCalled;
+      expect(response).toBeTruthy();
     });
   });
 });

@@ -10,6 +10,7 @@ describe('WithdrawalMoneyService', () => {
   const repositoryMock = {
     findUserById: jest.fn(),
     createUserOperation: jest.fn(),
+    findUserByIdOrThrow: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -32,10 +33,10 @@ describe('WithdrawalMoneyService', () => {
     it('should create a new user', async () => {
       const user = repositoryMock.findUserById.mockResolvedValueOnce(null);
       repositoryMock.createUserOperation.mockResolvedValueOnce({
-        id: '345',
-        balance: 20,
+        id: '478',
+        balance: -20,
       });
-      const withdrawRequest = { userId: '123', value: 20 };
+      const withdrawRequest = { userId: '478', value: 20 };
 
       await service.withdrawMoney(withdrawRequest);
 
@@ -46,10 +47,10 @@ describe('WithdrawalMoneyService', () => {
     it('should still register the operation and record a negative balance', async () => {
       const user = repositoryMock.findUserById.mockResolvedValueOnce(null);
       repositoryMock.createUserOperation.mockResolvedValueOnce({
-        id: '345',
-        balance: 20,
+        id: '478',
+        balance: -20,
       });
-      const withdrawRequest = { userId: '123', value: 20 };
+      const withdrawRequest = { userId: '478', value: 20 };
 
       const response = await service.withdrawMoney(withdrawRequest);
 
@@ -67,9 +68,9 @@ describe('WithdrawalMoneyService', () => {
       });
       repositoryMock.createUserOperation.mockResolvedValueOnce({
         id: '345',
-        balance: 20,
+        balance: 0,
       });
-      const withdrawRequest = { userId: '123', value: 20 };
+      const withdrawRequest = { userId: '345', value: 20 };
 
       const response = await service.withdrawMoney(withdrawRequest);
 

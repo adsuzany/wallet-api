@@ -8,7 +8,7 @@ export class ConsultBalanceService {
 
   async getBalance(id: string): Promise<string> {
     try {
-      const { balance } = await this.userRepository.findUserById(id);
+      const { balance } = await this.userRepository.findUserByIdOrThrow(id);
       return RESPONSE.BALANCE(balance);
     } catch (error) {
       console.error(error);

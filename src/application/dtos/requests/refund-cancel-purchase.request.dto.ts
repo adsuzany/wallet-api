@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsUUID } from 'class-validator';
 import { ATTRUBUTES } from 'src/common/constants/attributes.constants';
 
-export class RefundCancelPurchaseDto {
+export class RefundCancelPurchaseRequestDto {
   @IsNotEmpty()
   @IsUUID()
   @ApiProperty({
