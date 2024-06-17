@@ -1,6 +1,3 @@
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
   <div style="text-align: center">
   
   # Wallet API 💰
@@ -34,7 +31,7 @@ $ npm run db:up
 
 ## Running the app
 
-Create a .env file into the root directory. Must have your local database url.
+Create a .env file into the root directory. Must have your local database URL.
 
 ```
 DATABASE_URL=mysql://youruser:yourpass@localhost:3306/wallet
