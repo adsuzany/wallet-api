@@ -87,17 +87,19 @@ To access the swagger use this endpoint: /swagger-docs.
 
 The disposition of the folders are as the image bellow.
 
-![folders disposition](/public/ddd.png)
+![Folders disposition](/public/ddd.png)
+
+![Service Disposition](/public/services-disposition.png)
 
 ## ERM Diagram
 
 This project uses a database with entity relationship, that so this is the model diagram that represents it.
 
-![alt text](/public/erm.png)
+![ERM Diagram](/public/erm.png)
 
 ## Service Architeture
 
-![alt text](/public/service.png)
+![Service Architeture](/public/service.png)
 
 ## Support
 
