@@ -95,6 +95,10 @@ This project uses a database with entity relationship, that so this is the model
 
 ![alt text](/public/erm.png)
 
+## Service Architeture
+
+![alt text](/public/service.png)
+
 ## Support
 
 Nest is an MIT-licensed open source project. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
