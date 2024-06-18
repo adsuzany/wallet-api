@@ -15,7 +15,6 @@ describe('RefundCancelService', () => {
   const userRepositoryMock = {
     findUserById: jest.fn(),
     createUserOperation: jest.fn(),
-    findUserByIdOrThrow: jest.fn(),
   };
 
   const operationRepositoryMock = {
@@ -30,7 +29,7 @@ describe('RefundCancelService', () => {
         RefundCancelService,
         {
           provide: UserRepository,
-          useValue: userRepository,
+          useValue: userRepositoryMock,
         },
         {
           provide: OperationRepository,
@@ -64,7 +63,12 @@ describe('RefundCancelService', () => {
 
   describe('When a purchase doesnt exists', () => {
     it('should throw an Error', async () => {
-      const user = userRepositoryMock.findUserById.mockResolvedValueOnce(null);
+      const user = userRepositoryMock.findUserById.mockResolvedValueOnce({
+        id: '456',
+        balance: 20,
+      });
+
+      operationRepositoryMock.findPurchaseByUser.mockResolvedValueOnce(null);
 
       const refundCancelRequest: RefundCancelPurchaseRequestDto = {
         userId: '456',
@@ -82,11 +86,49 @@ describe('RefundCancelService', () => {
 
   describe('When a user exists', () => {
     it('should record the cancel and refund operation to add back the money from the wallet', async () => {
+      userRepositoryMock.findUserById.mockResolvedValueOnce({
+        id: '456',
+        balance: 20,
+      });
+
       operationRepositoryMock.findPurchaseByUser.mockResolvedValueOnce({
         id: '466',
         type: OperationTypeEnum.refund,
         userId: '468',
         value: 20,
+        status: 0,
+        currentBalance: 30,
+      });
+
+      userRepositoryMock.createUserOperation.mockResolvedValueOnce({
+        id: '468',
+        balance: 10,
+      });
+
+      const refundCancelRequest: RefundCancelPurchaseRequestDto = {
+        purchaseId: '466',
+        userId: '468',
+      };
+
+      const response = await service.refundCancelPurchase(refundCancelRequest);
+
+      expect(operationRepositoryMock.findPurchaseByUser).toBeCalled();
+      expect(userRepositoryMock.createUserOperation).toBeCalled;
+      expect(response).toBeTruthy();
+    });
+
+    it('should not make the operation only if the status of the purchase is false to indicate tha a cancel was not done yep', async () => {
+      userRepositoryMock.findUserById.mockResolvedValue({
+        id: '456',
+        balance: 20,
+      });
+
+      operationRepositoryMock.findPurchaseByUser.mockResolvedValueOnce({
+        id: '466',
+        type: OperationTypeEnum.refund,
+        userId: '468',
+        value: 20,
+        status: 1,
         currentBalance: 30,
       });
 
@@ -100,11 +142,12 @@ describe('RefundCancelService', () => {
         purchaseId: '466',
       };
 
-      const response = await service.refundCancelPurchase(refundCancelRequest);
-
+      try {
+        await service.refundCancelPurchase(refundCancelRequest);
+      } catch (error) {
+        expect(error).toEqual(new NotFoundException('Purchase not found'));
+      }
       expect(operationRepositoryMock.findPurchaseByUser).toBeCalled();
-      expect(userRepositoryMock.createUserOperation).toBeCalled;
-      expect(response).toBeTruthy();
     });
   });
 });

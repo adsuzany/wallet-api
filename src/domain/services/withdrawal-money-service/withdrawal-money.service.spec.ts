@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WithdrawalMoneyService } from './withdrawal-money.service';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
 import { InfrastructureModule } from 'src/infrastructure/infrastructure.module';
+import { NotFoundException } from '@nestjs/common';
+import { RESPONSE } from 'src/common/constants/response.constants';
 
 describe('WithdrawalMoneyService', () => {
   let service: WithdrawalMoneyService;
@@ -10,7 +12,6 @@ describe('WithdrawalMoneyService', () => {
   const repositoryMock = {
     findUserById: jest.fn(),
     createUserOperation: jest.fn(),
-    findUserByIdOrThrow: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -30,33 +31,18 @@ describe('WithdrawalMoneyService', () => {
   });
 
   describe('When a user doesnt exists', () => {
-    it('should create a new user', async () => {
+    it('should throw a Not Found error', async () => {
       const user = repositoryMock.findUserById.mockResolvedValueOnce(null);
-      repositoryMock.createUserOperation.mockResolvedValueOnce({
-        id: '478',
-        balance: -20,
-      });
+
       const withdrawRequest = { userId: '478', value: 20 };
 
-      await service.withdrawMoney(withdrawRequest);
-
+      try {
+        await service.withdrawMoney(withdrawRequest);
+      } catch (error) {
+        expect(error).toEqual(new NotFoundException(RESPONSE.BALANCE_NEGATIVE));
+      }
       expect(user.mock.results.values()[0]).toBeFalsy();
       expect(repositoryMock.createUserOperation).toBeCalled;
-    });
-
-    it('should still register the operation and record a negative balance', async () => {
-      const user = repositoryMock.findUserById.mockResolvedValueOnce(null);
-      repositoryMock.createUserOperation.mockResolvedValueOnce({
-        id: '478',
-        balance: -20,
-      });
-      const withdrawRequest = { userId: '478', value: 20 };
-
-      const response = await service.withdrawMoney(withdrawRequest);
-
-      expect(user.mock.results.values()[0]).toBeFalsy();
-      expect(repositoryMock.createUserOperation).toBeCalled;
-      expect(response).toBeTruthy();
     });
   });
 
@@ -77,6 +63,22 @@ describe('WithdrawalMoneyService', () => {
       expect(repositoryMock.findUserById).toBeCalled();
       expect(repositoryMock.createUserOperation).toBeCalled;
       expect(response).toBeTruthy();
+    });
+
+    it('should throw an exeption when the balance is 0', async () => {
+      repositoryMock.findUserById.mockResolvedValueOnce({
+        id: '345',
+        balance: 0,
+      });
+
+      const withdrawRequest = { userId: '345', value: 20 };
+
+      try {
+        await service.withdrawMoney(withdrawRequest);
+      } catch (error) {
+        expect(error).toEqual(new NotFoundException(RESPONSE.BALANCE_NEGATIVE));
+      }
+      expect(repositoryMock.findUserById).toBeCalled();
     });
   });
 });

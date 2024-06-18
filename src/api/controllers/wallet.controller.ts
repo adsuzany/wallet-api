@@ -5,6 +5,7 @@ import { PurchaseService } from './../../domain/services/purchase-service/purcha
 import { AddMoneyService } from '../../domain/services/add-money-service/add-money.service';
 import { AddMoneyRequestDto } from './../../application/dtos/requests/add-money.request.dto';
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -17,6 +18,7 @@ import { WithdrawalMoneyService } from 'src/domain/services/withdrawal-money-ser
 import { WalletStatementService } from 'src/domain/services/wallet-statement-service/wallet-statement.service';
 import { WithdrawalMoneyRequestDto } from 'src/application/dtos/requests/withdrawal-money.request.dto';
 import {
+  ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
@@ -28,7 +30,7 @@ import {
 } from '@nestjs/swagger';
 import { SWAGGER } from 'src/common/constants/swagger-descriptions.constants';
 import { RESPONSE } from 'src/common/constants/response.constants';
-import { StatementResponseDto } from 'src/application/dtos/responses/statement.response';
+import { StatementResponseDto } from 'src/application/dtos/responses/statement.response.dto';
 import { ATTRUBUTES } from 'src/common/constants/attributes.constants';
 
 @ApiTags(SWAGGER.TAG)
@@ -96,7 +98,16 @@ export class WalletController {
     description: RESPONSE.SUCCESS,
   })
   @ApiInternalServerErrorResponse({
+    description: RESPONSE.NOT_FOUND,
     type: Error,
+  })
+  @ApiBadRequestResponse({
+    description: RESPONSE.BAD_REQUEST,
+    type: BadRequestException,
+  })
+  @ApiNotFoundResponse({
+    description: RESPONSE.NOT_FOUND,
+    type: NotFoundException,
   })
   @Put('deposit')
   async depositMoney(@Body() body: AddMoneyRequestDto): Promise<string> {
@@ -112,7 +123,16 @@ export class WalletController {
     description: RESPONSE.SUCCESS,
   })
   @ApiInternalServerErrorResponse({
+    description: RESPONSE.BALANCE_NEGATIVE,
     type: Error,
+  })
+  @ApiNotFoundResponse({
+    description: RESPONSE.BALANCE_NEGATIVE,
+    type: NotFoundException,
+  })
+  @ApiBadRequestResponse({
+    description: RESPONSE.BAD_REQUEST,
+    type: BadRequestException,
   })
   @Put('withdraw')
   async withdrawMoney(
@@ -125,11 +145,22 @@ export class WalletController {
     description: SWAGGER.PURCHASE.DESCRIPTION,
   })
   @ApiInternalServerErrorResponse({
+    description: RESPONSE.NOT_FOUND,
     type: Error,
+  })
+  @ApiNotFoundResponse({
+    description: RESPONSE.NOT_FOUND,
+    type: NotFoundException,
+  })
+  @ApiCreatedResponse({
+    type: StatementResponseDto,
+    description: RESPONSE.SUCCESS,
   })
   @ApiBody({ type: WithdrawalMoneyRequestDto })
   @Put('purchase')
-  async purchase(@Body() body: WithdrawalMoneyRequestDto): Promise<string> {
+  async purchase(
+    @Body() body: WithdrawalMoneyRequestDto
+  ): Promise<StatementResponseDto> {
     return this.purchaseService.recordPurchase(body);
   }
 
@@ -142,6 +173,7 @@ export class WalletController {
     description: RESPONSE.SUCCESS,
   })
   @ApiInternalServerErrorResponse({
+    description: RESPONSE.NOT_FOUND,
     type: Error,
   })
   @ApiNotFoundResponse({

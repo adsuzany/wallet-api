@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AddMoneyService } from './add-money.service';
 import { InfrastructureModule } from 'src/infrastructure/infrastructure.module';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
+import { NotFoundException } from '@nestjs/common';
 
 describe('AddMoneyService', () => {
   let service: AddMoneyService;
@@ -10,7 +11,6 @@ describe('AddMoneyService', () => {
   const repositoryMock = {
     findUserById: jest.fn(),
     createUserOperation: jest.fn(),
-    findUserByIdOrThrow: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -30,18 +30,16 @@ describe('AddMoneyService', () => {
   });
 
   describe('When a user doesnt exists', () => {
-    it('should create a new user', async () => {
+    it('should throw a Not Found error', async () => {
       const user = repositoryMock.findUserById.mockResolvedValueOnce(null);
-      repositoryMock.createUserOperation.mockResolvedValueOnce({
-        id: '098',
-        balance: 20,
-      });
       const addMoneyRequest = { userId: '098', value: 20 };
 
-      await service.addMoney(addMoneyRequest);
-
+      try {
+        await service.addMoney(addMoneyRequest);
+      } catch (error) {
+        expect(error).toEqual(new NotFoundException('User not found'));
+      }
       expect(user.mock.results.values()[0]).toBeFalsy();
-      expect(repositoryMock.createUserOperation).toBeCalled;
     });
   });
 

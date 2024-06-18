@@ -12,7 +12,6 @@ export class RefundCancelPurchaseRequestDto {
   purchaseId: string;
 
   @IsNotEmpty()
-  @IsUUID()
   @ApiProperty({
     description: ATTRUBUTES.USER_ID.DESCRIPTION,
     example: ATTRUBUTES.USER_ID.EXAMPLE,

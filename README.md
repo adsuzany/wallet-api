@@ -15,6 +15,26 @@
 This project is a REST Wallet API, the main purpose is to receive events of operations into the wallet balance and get information.
 Based in NestJS and using Prisma ORM.
 
+## Business Rules
+
+- It should be referred to as a digital wallet;
+- To make the requests the user must be recorded in database (by dump);
+- Must check the wallet balance;
+- Must consult the statement with all the operations;
+- When the user does not exist, NOT FOUND must be returned for all endpoints;
+- It must carry out balance operations;
+  - Adding Values;
+    - Should only add values higher than $0.1;
+  - Withdrawals;
+    - Should only withdraw if the balance is positive;
+    - Should only withdraw values higher than $0.1;
+  - Entering Purchasing values;
+    - If there is no balance, it becomes negative;
+  - Cancellation and reversal will be treated as the same operation;
+- Requests to the wallet can come from various channels;
+  - Requests can be received a middleware or a webhook based on Event Listener and added to a queue for processing each event.
+    (Wasn't able to finish this)
+
 ## Docker Container
 
 Exposed in port 3000. Use - localhost:3000/wallet - to requests.

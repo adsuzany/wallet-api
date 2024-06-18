@@ -18,11 +18,12 @@ export class RefundCancelService {
     payload: RefundCancelPurchaseRequestDto
   ): Promise<string> {
     try {
-      const operation: IOperation =
-        await this.operationRepository.findPurchaseByUser(payload);
       const user: IUser = await this.userRepository.findUserById(
         payload.userId
       );
+
+      const operation: IOperation =
+        await this.operationRepository.findPurchaseByUser(payload);
 
       await this.addOperation(user, operation, payload);
 
@@ -37,21 +38,29 @@ export class RefundCancelService {
     user: IUser,
     operation: IOperation,
     payload: RefundCancelPurchaseRequestDto
-  ): Promise<void> {
+  ): Promise<boolean> {
     try {
-      const addOperation: IOperation = {
-        currentBalance: user ? user.balance + operation.value : operation.value,
-        type: OperationTypeEnum.refund,
-        value: operation.value,
-      };
+      if (!operation.status) {
+        const addOperation: IOperation = {
+          currentBalance: user
+            ? user.balance + operation.value
+            : operation.value,
+          type: OperationTypeEnum.refund,
+          value: operation.value,
+          status: true,
+        };
 
-      await this.userRepository.createUserOperation(
-        payload.purchaseId,
-        addOperation
-      );
+        await this.userRepository.createUserOperation(
+          payload.userId,
+          addOperation
+        );
+        return true;
+      }
+
+      throw new Error();
     } catch (error) {
       console.error(error);
-      throw new Error(error.message);
+      throw new Error();
     }
   }
 }

@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import { PrismaService } from '../services/prisma.service';
 import { IOperation } from 'src/domain/repositories/operation.interface';
 import { Injectable } from '@nestjs/common';
@@ -9,31 +8,21 @@ export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async createUserOperation(id: string, record: IOperation): Promise<IUser> {
-    const operation = {
-      create: record,
-    };
-
-    return this.prisma.user.upsert({
+    return this.prisma.user.update({
       where: { id },
-      create: {
-        id,
+      data: {
         balance: record.currentBalance,
-        operations: operation,
+        operations: {
+          create: record,
+        },
       },
-      update: {
-        balance: record.currentBalance,
-        operations: operation,
+      include: {
+        operations: { orderBy: { createdAt: 'desc' } },
       },
     });
   }
 
   async findUserById(id: string): Promise<IUser> {
-    return this.prisma.user.findUnique({
-      where: { id },
-    });
-  }
-
-  async findUserByIdOrThrow(id: string): Promise<IUser> {
     return this.prisma.user.findUniqueOrThrow({
       where: { id },
     });

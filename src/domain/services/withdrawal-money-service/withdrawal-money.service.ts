@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { WithdrawalMoneyRequestDto } from 'src/application/dtos/requests/withdrawal-money.request.dto';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
 import { IOperation } from '../../repositories/operation.interface';
@@ -15,18 +15,36 @@ export class WithdrawalMoneyService {
       const user: IUser = await this.userRepository.findUserById(
         payload.userId
       );
-      const addOperation: IOperation = {
-        currentBalance: user ? user.balance - payload.value : -payload.value,
-        type: OperationTypeEnum.withdrawal,
-        value: payload.value,
-      };
 
-      await this.userRepository.createUserOperation(
-        payload.userId,
-        addOperation
-      );
+      await this.withdrawOperation(user, payload);
 
       return RESPONSE.SUCCESS;
+    } catch (error) {
+      console.error(error);
+      throw new NotFoundException(RESPONSE.BALANCE_NEGATIVE);
+    }
+  }
+
+  private async withdrawOperation(
+    user: IUser,
+    payload: WithdrawalMoneyRequestDto
+  ): Promise<boolean> {
+    try {
+      if (user && user.balance >= payload.value) {
+        const addOperation: IOperation = {
+          currentBalance: user.balance - payload.value,
+          type: OperationTypeEnum.withdrawal,
+          value: payload.value,
+        };
+
+        await this.userRepository.createUserOperation(
+          payload.userId,
+          addOperation
+        );
+        return true;
+      }
+
+      throw new Error();
     } catch (error) {
       console.error(error);
       throw new Error(error.message);

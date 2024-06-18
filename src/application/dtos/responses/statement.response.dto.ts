@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OperationType } from '@prisma/client';
 import { ATTRUBUTES } from 'src/common/constants/attributes.constants';
+import { OperationTypeEnum } from 'src/common/enums/operation-type.enum';
 
 export class StatementResponseDto {
   @ApiProperty({
@@ -12,6 +13,7 @@ export class StatementResponseDto {
   @ApiProperty({
     description: ATTRUBUTES.STATEMENT.TYPE.DESCRIPTION,
     example: ATTRUBUTES.STATEMENT.TYPE.EXAMPLE,
+    enum: OperationTypeEnum,
   })
   type: OperationType;
 

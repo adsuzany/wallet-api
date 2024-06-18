@@ -21,7 +21,7 @@ export class AddMoneyService {
       return RESPONSE.SUCCESS;
     } catch (error) {
       console.error(error);
-      throw new Error(error.message);
+      throw new NotFoundException(RESPONSE.NOT_FOUND);
     }
   }
 

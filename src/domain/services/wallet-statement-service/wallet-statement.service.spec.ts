@@ -2,14 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WalletStatementService } from './wallet-statement.service';
 import { OperationRepository } from 'src/infrastructure/repositories/operation.repository';
 import { InfrastructureModule } from 'src/infrastructure/infrastructure.module';
-import { StatementResponseDto } from 'src/application/dtos/responses/statement.response';
+import { StatementResponseDto } from 'src/application/dtos/responses/statement.response.dto';
+import { UserRepository } from 'src/infrastructure/repositories/user.repository';
 
 describe('WalletStatementService', () => {
   let service: WalletStatementService;
   let operation: OperationRepository;
 
-  const repositoryMock = {
+  const operationsRepositoryMock = {
     findUserOperations: jest.fn(),
+  };
+
+  const userRepositoryMock = {
+    findUserById: jest.fn(),
+    createUserOperation: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -19,7 +25,11 @@ describe('WalletStatementService', () => {
         WalletStatementService,
         {
           provide: OperationRepository,
-          useValue: repositoryMock,
+          useValue: operationsRepositoryMock,
+        },
+        {
+          provide: UserRepository,
+          useValue: userRepositoryMock,
         },
       ],
     }).compile();
@@ -30,15 +40,20 @@ describe('WalletStatementService', () => {
 
   describe('When the statement function is called', () => {
     it('should return an array of Operations objects', async () => {
-      repositoryMock.findUserOperations.mockResolvedValueOnce(
+      userRepositoryMock.findUserById.mockResolvedValueOnce({
+        id: '345',
+        balance: 20,
+      });
+
+      operationsRepositoryMock.findUserOperations.mockResolvedValueOnce(
         new StatementResponseDto()
       );
 
       const statementRequest = '456';
 
       const result = await service.getWalletStatement(statementRequest);
-      expect(repositoryMock.findUserOperations).toBeCalled();
-      expect(repositoryMock.findUserOperations).toBeTruthy();
+      expect(operationsRepositoryMock.findUserOperations).toBeCalled();
+      expect(operationsRepositoryMock.findUserOperations).toBeTruthy();
       expect(result).toMatchObject(new StatementResponseDto());
     });
   });

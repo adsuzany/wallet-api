@@ -10,10 +10,11 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `Operation` (
     `id` VARCHAR(191) NOT NULL,
-    `type` ENUM('Deposit', 'Withdrawal', 'Purchase', 'Cancell', 'Refund') NOT NULL,
+    `type` ENUM('Deposit', 'Withdrawal', 'Purchase', 'Cancel_Refund') NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
     `value` DOUBLE NOT NULL,
     `currentBalance` DOUBLE NOT NULL,
+    `status` BOOLEAN NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)

@@ -11,7 +11,6 @@ describe('ConsultBalanceService', () => {
   const repositoryMock = {
     findUserById: jest.fn(),
     createUserOperation: jest.fn(),
-    findUserByIdOrThrow: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -32,8 +31,7 @@ describe('ConsultBalanceService', () => {
 
   describe('When the user is not found', () => {
     it('should throw a Not Found error', async () => {
-      const user =
-        repositoryMock.findUserByIdOrThrow.mockResolvedValueOnce(null);
+      const user = repositoryMock.findUserById.mockResolvedValueOnce(null);
 
       const balanceRequest = '456';
 
@@ -48,7 +46,7 @@ describe('ConsultBalanceService', () => {
 
   describe('When the user exists', () => {
     it('should return the balance', async () => {
-      const user = repositoryMock.findUserByIdOrThrow.mockResolvedValueOnce({
+      const user = repositoryMock.findUserById.mockResolvedValueOnce({
         id: '456',
         balance: 20,
       });
@@ -56,7 +54,7 @@ describe('ConsultBalanceService', () => {
 
       const response = await service.getBalance(balanceRequest);
 
-      expect(repositoryMock.findUserByIdOrThrow).toBeCalled();
+      expect(repositoryMock.findUserById).toBeCalled();
       expect(response).toBeTruthy();
     });
   });

@@ -25,7 +25,8 @@ model Operation {
   type            OperationType 
   userId          String
   value           Float           
-  currentBalance  Float           
+  currentBalance  Float
+  status          Boolean?        @default(false) 
   createdAt       DateTime        @default(now())
   user            User            @relation(fields: [userId], references: [id])
 }
@@ -34,6 +35,5 @@ enum OperationType {
   Deposit
   Withdrawal
   Purchase
-  Cancell
-  Refund
+  Cancel_Refund
 }

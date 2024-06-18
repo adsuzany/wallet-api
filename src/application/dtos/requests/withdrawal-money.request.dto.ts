@@ -3,7 +3,6 @@ import { IsNotEmpty, IsNumber, IsUUID, Min } from 'class-validator';
 import { ATTRUBUTES } from 'src/common/constants/attributes.constants';
 
 export class WithdrawalMoneyRequestDto {
-  @IsUUID()
   @IsNotEmpty()
   @ApiProperty({
     description: ATTRUBUTES.USER_ID.DESCRIPTION,
